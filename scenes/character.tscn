@@ -1,7 +1,8 @@
-[gd_scene load_steps=14 format=3 uid="uid://dgeoalo2w4h5h"]
+[gd_scene load_steps=15 format=3 uid="uid://dgeoalo2w4h5h"]
 
 [ext_resource type="AnimationLibrary" uid="uid://d0v88cokiuf32" path="res://resources/character_animation_library.res" id="1_6yy11"]
 [ext_resource type="Script" path="res://scripts/character.gd" id="1_miel3"]
+[ext_resource type="Script" path="res://scripts/elevator.gd" id="2_86ko8"]
 [ext_resource type="PackedScene" uid="uid://c64yl65237mq" path="res://scenes/shadow.tscn" id="2_nykc0"]
 [ext_resource type="Texture2D" uid="uid://dkmtxw63dctm3" path="res://sprites/character.png" id="2_xlxxd"]
 [ext_resource type="Shape2D" uid="uid://cu5sl6obal0ji" path="res://resources/character_collision_shape.tres" id="4_3nkkh"]
@@ -36,6 +37,12 @@ _data = {
 collision_layer = 16
 motion_mode = 1
 script = ExtResource("1_miel3")
+
+[node name="CharacterElevator" type="Node2D" parent="." node_paths=PackedStringArray("extra_passengers")]
+script = ExtResource("2_86ko8")
+floors_amount = 4
+update_passengers_layer = false
+extra_passengers = [NodePath("..")]
 
 [node name="Shadow" parent="." instance=ExtResource("2_nykc0")]
 position = Vector2(0, 4)
@@ -75,15 +82,21 @@ script = ExtResource("7_cu5du")
 position = Vector2(0, 4)
 shape = ExtResource("4_3nkkh")
 
-[node name="EntityDetector" type="Area2D" parent="." node_paths=PackedStringArray("entity")]
+[node name="Elevator" type="Node2D" parent="."]
+script = ExtResource("2_86ko8")
+floors_amount = 4
+floor_level = 1
+
+[node name="EntityDetector" type="Area2D" parent="Elevator"]
 collision_layer = 0
 script = ExtResource("10_01fy2")
-entity = NodePath("..")
 
-[node name="Shape" type="CollisionShape2D" parent="EntityDetector"]
+[node name="Shape" type="CollisionShape2D" parent="Elevator/EntityDetector"]
 shape = ExtResource("10_3b4ws")
 
 [connection signal="facing_direction_changed" from="." to="Sprite" method="adequate_to_direction"]
+[connection signal="floor_changed" from="." to="CharacterElevator" method="set_floor_level"]
+[connection signal="floor_changed" from="." to="Elevator" method="set_floor_level"]
 [connection signal="z_changed" from="." to="Sprite" method="adequate_to_z"]
 [connection signal="ground_z_changed" from="GroundZDetector" to="Shadow/Sprite" method="adequate_to_z"]
 

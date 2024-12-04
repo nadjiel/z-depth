@@ -1,14 +1,15 @@
-[gd_scene load_steps=10 format=3 uid="uid://ddm4gmu6laxgx"]
+[gd_scene load_steps=11 format=3 uid="uid://ddm4gmu6laxgx"]
 
 [ext_resource type="Script" path="res://scripts/entity.gd" id="1_0vk5y"]
+[ext_resource type="Script" path="res://scripts/elevator.gd" id="2_i3x8y"]
 [ext_resource type="SpriteFrames" uid="uid://c62i36o2fieru" path="res://resources/flying_flower_sprite_frames.tres" id="2_rijm0"]
 [ext_resource type="PackedScene" uid="uid://c64yl65237mq" path="res://scenes/shadow.tscn" id="3_tglu1"]
 [ext_resource type="Script" path="res://scripts/responsive_sprite.gd" id="4_1p7ch"]
 [ext_resource type="Shape2D" uid="uid://cn1coymxfntgs" path="res://resources/flying_flower_collision_shape.tres" id="4_nv62t"]
 [ext_resource type="Script" path="res://scripts/ground_z_detector.gd" id="5_tq2l5"]
 [ext_resource type="Script" path="res://scripts/tile_detector.gd" id="6_oigxr"]
-[ext_resource type="Script" path="res://scripts/entity_detector.gd" id="8_4ykci"]
 [ext_resource type="Shape2D" uid="uid://l4nh5qx20sm4" path="res://resources/flying_flower_detectable_shape.tres" id="8_vg306"]
+[ext_resource type="Script" path="res://scripts/detectable.gd" id="9_0n2fv"]
 
 [node name="FlyingFlower" type="CharacterBody2D"]
 collision_layer = 16
@@ -16,6 +17,12 @@ motion_mode = 1
 script = ExtResource("1_0vk5y")
 gravity_acceleration = 0.0
 z = 48.0
+
+[node name="FlyingFlowerElevator" type="Node2D" parent="." node_paths=PackedStringArray("extra_passengers")]
+script = ExtResource("2_i3x8y")
+floors_amount = 4
+update_passengers_layer = false
+extra_passengers = [NodePath("..")]
 
 [node name="Shadow" parent="." instance=ExtResource("3_tglu1")]
 z_index = -1
@@ -42,13 +49,20 @@ script = ExtResource("6_oigxr")
 [node name="Shape" type="CollisionShape2D" parent="TileDetector"]
 shape = ExtResource("4_nv62t")
 
-[node name="Detectable" type="Area2D" parent="." node_paths=PackedStringArray("entity")]
-script = ExtResource("8_4ykci")
-entity = NodePath("..")
+[node name="Elevator" type="Node2D" parent="."]
+script = ExtResource("2_i3x8y")
+floors_amount = 4
+floor_level = 1
 
-[node name="Shape" type="CollisionShape2D" parent="Detectable"]
+[node name="Detectable" type="Area2D" parent="Elevator" node_paths=PackedStringArray("entity")]
+script = ExtResource("9_0n2fv")
+entity = NodePath("../..")
+
+[node name="Shape" type="CollisionShape2D" parent="Elevator/Detectable"]
 shape = ExtResource("8_vg306")
 
+[connection signal="floor_changed" from="." to="FlyingFlowerElevator" method="set_floor_level"]
+[connection signal="floor_changed" from="." to="Elevator" method="set_floor_level"]
 [connection signal="z_changed" from="." to="Sprite" method="adequate_to_z"]
 [connection signal="ground_z_changed" from="GroundZDetector" to="Shadow/Sprite" method="adequate_to_z"]
 
