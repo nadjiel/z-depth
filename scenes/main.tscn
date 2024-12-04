@@ -1,0 +1,18 @@
+[gd_scene load_steps=4 format=4 uid="uid://brmjenwgphv7b"]
+
+[ext_resource type="TileSet" uid="uid://dn8vvqncc4myt" path="res://resources/tile_set.tres" id="1_2agak"]
+[ext_resource type="PackedScene" uid="uid://dgeoalo2w4h5h" path="res://scenes/character.tscn" id="1_hyu2p"]
+[ext_resource type="PackedScene" uid="uid://ddm4gmu6laxgx" path="res://scenes/flying_flower.tscn" id="3_fxt0o"]
+
+[node name="Main" type="Node2D"]
+y_sort_enabled = true
+
+[node name="TileMap" type="TileMapLayer" parent="."]
+tile_map_data = PackedByteArray("AAADAAYAAAAAAAAAAAAEAAYAAAAAAAAAAAAFAAYAAAAAAAAAAAAGAAYAAAACAAAAAAAHAAYAAAACAAAAAAAIAAYAAAACAAEAAAAMAAYAAAAAAAEAAAALAAYAAAAAAAEAAAAKAAYAAAAAAAEAAAAJAAYAAAACAAEAAAADAAUAAAADAAAAAAADAAQAAAADAAAAAAADAAMAAAADAAAAAAADAAIAAAADAAAAAAAEAAIAAAADAAAAAAAFAAIAAAADAAAAAAAGAAIAAAADAAAAAAAHAAIAAAADAAAAAAAIAAIAAAADAAAAAAAJAAIAAAADAAAAAAAKAAIAAAADAAAAAAALAAIAAAADAAAAAAAMAAIAAAADAAAAAAAMAAMAAAADAAAAAAAMAAQAAAADAAAAAAAMAAUAAAADAAAAAAA=")
+tile_set = ExtResource("1_2agak")
+
+[node name="Character" parent="." instance=ExtResource("1_hyu2p")]
+position = Vector2(128, 72)
+
+[node name="FlyingFlower" parent="." instance=ExtResource("3_fxt0o")]
+position = Vector2(168, 72)

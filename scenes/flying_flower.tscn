@@ -1,0 +1,55 @@
+[gd_scene load_steps=10 format=3 uid="uid://ddm4gmu6laxgx"]
+
+[ext_resource type="Script" path="res://scripts/entity.gd" id="1_0vk5y"]
+[ext_resource type="SpriteFrames" uid="uid://c62i36o2fieru" path="res://resources/flying_flower_sprite_frames.tres" id="2_rijm0"]
+[ext_resource type="PackedScene" uid="uid://c64yl65237mq" path="res://scenes/shadow.tscn" id="3_tglu1"]
+[ext_resource type="Script" path="res://scripts/responsive_sprite.gd" id="4_1p7ch"]
+[ext_resource type="Shape2D" uid="uid://cn1coymxfntgs" path="res://resources/flying_flower_collision_shape.tres" id="4_nv62t"]
+[ext_resource type="Script" path="res://scripts/ground_z_detector.gd" id="5_tq2l5"]
+[ext_resource type="Script" path="res://scripts/tile_detector.gd" id="6_oigxr"]
+[ext_resource type="Script" path="res://scripts/entity_detector.gd" id="8_4ykci"]
+[ext_resource type="Shape2D" uid="uid://l4nh5qx20sm4" path="res://resources/flying_flower_detectable_shape.tres" id="8_vg306"]
+
+[node name="FlyingFlower" type="CharacterBody2D"]
+collision_layer = 16
+motion_mode = 1
+script = ExtResource("1_0vk5y")
+gravity_acceleration = 0.0
+z = 48.0
+
+[node name="Shadow" parent="." instance=ExtResource("3_tglu1")]
+z_index = -1
+position = Vector2(0, 4)
+
+[node name="Sprite" type="AnimatedSprite2D" parent="."]
+sprite_frames = ExtResource("2_rijm0")
+autoplay = "default"
+frame_progress = 0.823787
+script = ExtResource("4_1p7ch")
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = ExtResource("4_nv62t")
+
+[node name="GroundZDetector" type="Node" parent="." node_paths=PackedStringArray("tile_detector")]
+script = ExtResource("5_tq2l5")
+tile_detector = NodePath("../TileDetector")
+
+[node name="TileDetector" type="Area2D" parent="."]
+position = Vector2(0, 4)
+script = ExtResource("6_oigxr")
+
+[node name="Shape" type="CollisionShape2D" parent="TileDetector"]
+shape = ExtResource("4_nv62t")
+
+[node name="Detectable" type="Area2D" parent="." node_paths=PackedStringArray("entity")]
+script = ExtResource("8_4ykci")
+entity = NodePath("..")
+
+[node name="Shape" type="CollisionShape2D" parent="Detectable"]
+shape = ExtResource("8_vg306")
+
+[connection signal="z_changed" from="." to="Sprite" method="adequate_to_z"]
+[connection signal="ground_z_changed" from="GroundZDetector" to="Shadow/Sprite" method="adequate_to_z"]
+
+[editable path="Shadow"]

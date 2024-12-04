@@ -1,0 +1,30 @@
+[gd_resource type="TileSet" load_steps=3 format=3 uid="uid://dn8vvqncc4myt"]
+
+[ext_resource type="Texture2D" uid="uid://nim2whs5cvmg" path="res://sprites/tile_sheet.png" id="1_n0o80"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_ywee6"]
+texture = ExtResource("1_n0o80")
+margins = Vector2i(1, 1)
+separation = Vector2i(1, 1)
+0:0/0 = 0
+0:0/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:0/0/custom_data_0 = 16
+1:0/0 = 0
+2:0/0 = 0
+3:0/0 = 0
+3:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:1/0 = 0
+0:1/0/physics_layer_1/polygon_0/points = PackedVector2Array(-8, -8, 8, -8, 8, 8, -8, 8)
+0:1/0/custom_data_0 = 16
+1:1/0 = 0
+2:1/0 = 0
+3:1/0 = 0
+
+[resource]
+physics_layer_0/collision_layer = 15
+physics_layer_0/collision_mask = 0
+physics_layer_1/collision_layer = 1
+physics_layer_1/collision_mask = 0
+custom_data_layer_0/name = "Height"
+custom_data_layer_0/type = 2
+sources/0 = SubResource("TileSetAtlasSource_ywee6")

@@ -1,0 +1,25 @@
+[gd_resource type="SpriteFrames" load_steps=4 format=3 uid="uid://c62i36o2fieru"]
+
+[ext_resource type="Texture2D" uid="uid://2mnu6vlyd0g" path="res://sprites/flying_flower_sheet.png" id="1_bp5al"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_sr57p"]
+atlas = ExtResource("1_bp5al")
+region = Rect2(0, 0, 16, 16)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mtwfj"]
+atlas = ExtResource("1_bp5al")
+region = Rect2(16, 0, 16, 16)
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_sr57p")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mtwfj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]

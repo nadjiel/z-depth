@@ -1,0 +1,90 @@
+[gd_scene load_steps=14 format=3 uid="uid://dgeoalo2w4h5h"]
+
+[ext_resource type="AnimationLibrary" uid="uid://d0v88cokiuf32" path="res://resources/character_animation_library.res" id="1_6yy11"]
+[ext_resource type="Script" path="res://scripts/character.gd" id="1_miel3"]
+[ext_resource type="PackedScene" uid="uid://c64yl65237mq" path="res://scenes/shadow.tscn" id="2_nykc0"]
+[ext_resource type="Texture2D" uid="uid://dkmtxw63dctm3" path="res://sprites/character.png" id="2_xlxxd"]
+[ext_resource type="Shape2D" uid="uid://cu5sl6obal0ji" path="res://resources/character_collision_shape.tres" id="4_3nkkh"]
+[ext_resource type="Script" path="res://scripts/responsive_sprite.gd" id="4_v3ja8"]
+[ext_resource type="AnimationNodeStateMachine" uid="uid://b1y4q8e7vs31s" path="res://resources/character_animation_state_machine.tres" id="5_euj85"]
+[ext_resource type="Script" path="res://scripts/tile_detector.gd" id="7_cu5du"]
+[ext_resource type="Script" path="res://scripts/ground_z_detector.gd" id="7_r663q"]
+[ext_resource type="Script" path="res://scripts/entity_detector.gd" id="10_01fy2"]
+[ext_resource type="Shape2D" uid="uid://cvf34w44uer0g" path="res://resources/character_entity_detector_shape.tres" id="10_3b4ws"]
+
+[sub_resource type="Animation" id="Animation_hfydn"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame_coords")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [Vector2i(0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_w24vt"]
+_data = {
+"RESET": SubResource("Animation_hfydn")
+}
+
+[node name="Character" type="CharacterBody2D"]
+collision_layer = 16
+motion_mode = 1
+script = ExtResource("1_miel3")
+
+[node name="Shadow" parent="." instance=ExtResource("2_nykc0")]
+position = Vector2(0, 4)
+
+[node name="Animator" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_w24vt"),
+"character": ExtResource("1_6yy11")
+}
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_xlxxd")
+hframes = 3
+vframes = 6
+frame = 3
+script = ExtResource("4_v3ja8")
+
+[node name="Collider" type="CollisionShape2D" parent="."]
+position = Vector2(0, 4)
+shape = ExtResource("4_3nkkh")
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = ExtResource("5_euj85")
+advance_expression_base_node = NodePath("..")
+anim_player = NodePath("../Animator")
+parameters/Jump/blend_position = Vector2(0, 0)
+parameters/Walk/blend_position = Vector2(0, 0)
+
+[node name="GroundZDetector" type="Node" parent="." node_paths=PackedStringArray("tile_detector")]
+script = ExtResource("7_r663q")
+tile_detector = NodePath("../TileDetector")
+
+[node name="TileDetector" type="Area2D" parent="."]
+script = ExtResource("7_cu5du")
+
+[node name="Shape" type="CollisionShape2D" parent="TileDetector"]
+position = Vector2(0, 4)
+shape = ExtResource("4_3nkkh")
+
+[node name="EntityDetector" type="Area2D" parent="." node_paths=PackedStringArray("entity")]
+collision_layer = 0
+script = ExtResource("10_01fy2")
+entity = NodePath("..")
+
+[node name="Shape" type="CollisionShape2D" parent="EntityDetector"]
+shape = ExtResource("10_3b4ws")
+
+[connection signal="facing_direction_changed" from="." to="Sprite" method="adequate_to_direction"]
+[connection signal="z_changed" from="." to="Sprite" method="adequate_to_z"]
+[connection signal="ground_z_changed" from="GroundZDetector" to="Shadow/Sprite" method="adequate_to_z"]
+
+[editable path="Shadow"]
